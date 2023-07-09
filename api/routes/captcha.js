@@ -40,8 +40,8 @@ const configureText = (ctx, width, height) => {
     ctx.textAlign = "center";
     const text = randomText();
     ctx.globalCompositeOperation = "difference";
-    ctx.fillStyle = "white";
-    ctx.fillText(text, width / 2, height / 2);
+    ctx.strokeStyle = "white"
+    ctx.strokeText(text, width / 2, height / 2);
     return text;
 };
 
@@ -49,7 +49,7 @@ const configureText = (ctx, width, height) => {
 const generate = (width, height) => {
     const canvas = createCanvas(width, height);
     const ctx = canvas.getContext("2d");
-    ctx.rotate(randomRotation());
+    //ctx.rotate(randomRotation());
     const text = configureText(ctx, width, height);
 
     const colour1 = _generateRandomColour();
@@ -73,7 +73,6 @@ const generate = (width, height) => {
         (Math.random() * 20) + 10,      //transx
         100);                           //transy
 
-    
     return {
         image: canvas.toDataURL(),
         text: text
