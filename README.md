@@ -4,8 +4,8 @@ The initial code has been taken from the blog post here - https://healeycodes.co
 
 There are 2 endpoints 
 
-1. GET http://localhost:4000/captcha
-2. POST http://localhost:4000/captcha
+1. GET https://captcha-api-6152.onrender.com/captcha
+2. POST https://captcha-api-6152.onrender.com/captcha
 
 Functionality of the captcha generation code sends the captcha image along with the hash of the captcha text. 
 
@@ -15,10 +15,10 @@ The validation API requires the captch and the original hash to be passed in the
 
 Captcha Generation
 Sample Request for with default width and height of the captcha image is 
-GET http://localhost:4000/captcha
+GET https://captcha-api-6152.onrender.com/captcha
 
 The captcha image with the desired width and height could be requested with the below mentioned URI - 
-GET http://localhost:4000/captcha/:width?/:height?/
+GET https://captcha-api-6152.onrender.com/captcha/:width?/:height?/
 
 Captcha Verification
 Sample Request - 
