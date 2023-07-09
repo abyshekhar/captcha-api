@@ -14,7 +14,9 @@ const randomText = () =>
             .toString(36)
             .substring(2, 8)
     );
-
+const _generateRandomColour = () => {
+    return "rgb(" + Math.floor((Math.random() * 255)) + ", " + Math.floor((Math.random() * 255)) + ", " + Math.floor((Math.random() * 255)) + ")";
+}
 const FONTBASE = 200;
 const FONTSIZE = 35;
 
@@ -37,6 +39,8 @@ const configureText = (ctx, width, height) => {
     ctx.textBaseline = "middle";
     ctx.textAlign = "center";
     const text = randomText();
+    ctx.globalCompositeOperation = "difference";
+    ctx.fillStyle = "white";
     ctx.fillText(text, width / 2, height / 2);
     return text;
 };
@@ -47,6 +51,29 @@ const generate = (width, height) => {
     const ctx = canvas.getContext("2d");
     ctx.rotate(randomRotation());
     const text = configureText(ctx, width, height);
+
+    const colour1 = _generateRandomColour();
+    const colour2 = _generateRandomColour();
+    const gradient1 = ctx.createLinearGradient(0, 0, width, 0);
+    gradient1.addColorStop(0, colour1);
+    gradient1.addColorStop(1, colour2);
+
+    ctx.fillStyle = gradient1;
+    ctx.fillRect(0, 0, width, height);
+
+    const gradient2 = ctx.createLinearGradient(0, 0, width, 0);
+    gradient2.addColorStop(0, colour2);
+    gradient2.addColorStop(1, colour1);
+
+    ctx.fillStyle = gradient2;
+    ctx.setTransform((Math.random() / 10) + 0.9,    //scalex
+        0.1 - (Math.random() / 5),      //skewx
+        0.1 - (Math.random() / 5),      //skewy
+        (Math.random() / 10) + 0.9,     //scaley
+        (Math.random() * 20) + 10,      //transx
+        100);                           //transy
+
+    
     return {
         image: canvas.toDataURL(),
         text: text
@@ -68,7 +95,7 @@ router.get("/:width?/:height?/", (req, res) => {
     const { image, text } = generate(width, height);
     bcrypt.hash(text, 10, (err, hash) => {
         if (err) {
-            res.send({ error:'Error generating the captcha. Please try again.' });
+            res.send({ error: 'Error generating the captcha. Please try again.' });
         }
         else {
             res.send({ image, hash });
@@ -83,14 +110,13 @@ router.get('/', (req, res, next) => {
 router.post('/', (req, res, next) => {
     bcrypt.compare(req.body.captcha, req.body.hash, (err, result) => {
         if (err) {
-            return res.status(500).json({error:'Error in captcha verification'})
+            return res.status(500).json({ error: 'Error in captcha verification' })
         }
 
-        else if(result){
+        else if (result) {
             res.status(200).json({ message: 'Verification successful' })
-        } 
-        else
-        {
+        }
+        else {
             res.status(200).json({ message: 'Invalid captcha' })
         }
     })
